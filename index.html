@@ -162,9 +162,13 @@ ins{text-decoration:none;background:var(--add-bg);color:var(--add);border-radius
 .start li::before{content:attr(data-n);display:grid;place-items:center;width:32px;height:32px;border-radius:50%;border:1.5px solid rgba(246,240,228,.7);font:500 15px/1 var(--sans)}
 .start h3{margin:4px 0}
 .start p{margin:0;font-size:15px;line-height:24px;color:rgba(246,240,228,.85)}
-.start-cta{margin-left:56px}
+.start-cta{margin-left:56px;display:flex;flex-wrap:wrap;align-items:center;gap:12px}
 .p-terra .btn{background:var(--cream);color:var(--ink)}
 .p-terra .btn:hover{background:#fff}
+.p-terra .btn.copy{background:transparent;color:var(--cream);border:1px solid rgba(246,240,228,.55);cursor:pointer}
+.p-terra .btn.copy:hover{background:rgba(246,240,228,.12)}
+.btn.copy svg{width:16px;height:16px;flex:none}
+.copy-addr{flex-basis:100%;margin:0;font-size:14px;color:rgba(246,240,228,.85)}
 .terms{background:rgba(28,26,23,.16);border-radius:12px;padding:24px}
 .terms h3{margin:0 0 12px}
 .terms dl{margin:0;font-size:15px;line-height:22px}
@@ -360,7 +364,10 @@ footer .wrap{display:flex;justify-content:space-between;align-items:center;gap:1
           <li data-n="2"><div><h3>Получите перевод</h3><p>Фрагмент в&nbsp;вашем оформлении, глоссарий и&nbsp;список спорных мест.</p></div></li>
           <li data-n="3"><div><h3>Сравните</h3><p>Ваш редактор сравнивает с&nbsp;привычной работой. Если подходит, называем цену и&nbsp;срок для всей книги.</p></div></li>
         </ol>
-        <div class="start-cta"><a class="btn" href="mailto:hello@verbariumbooks.ru?subject=%D0%9F%D1%80%D0%BE%D0%B1%D0%BD%D1%8B%D0%B9%20%D0%BF%D0%B5%D1%80%D0%B5%D0%B2%D0%BE%D0%B4">Прислать фрагмент</a></div>
+        <div class="start-cta"><a class="btn" href="mailto:hello@verbariumbooks.ru?subject=%D0%9F%D1%80%D0%BE%D0%B1%D0%BD%D1%8B%D0%B9%20%D0%BF%D0%B5%D1%80%D0%B5%D0%B2%D0%BE%D0%B4">Прислать фрагмент</a>
+          <button class="btn copy" type="button" data-copy="hello@verbariumbooks.ru"><svg viewBox="0 0 16 16" aria-hidden="true"><rect x="5" y="5" width="9" height="9" rx="1.5" fill="none" stroke="currentColor" stroke-width="1.4"/><path d="M11 5V3.5A1.5 1.5 0 0 0 9.5 2h-6A1.5 1.5 0 0 0 2 3.5v6A1.5 1.5 0 0 0 3.5 11H5" fill="none" stroke="currentColor" stroke-width="1.4"/></svg><span>Скопировать адрес</span></button>
+          <p class="copy-addr">Почта: hello@verbariumbooks.ru</p>
+        </div>
       </div>
       <div class="terms">
         <h3>Условия пробного перевода</h3>
@@ -389,6 +396,16 @@ footer .wrap{display:flex;justify-content:space-between;align-items:center;gap:1
   if(!('IntersectionObserver' in window)){els.forEach(function(e){e.classList.add('in')});return;}
   var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target);}})},{rootMargin:'0px 0px -10% 0px'});
   els.forEach(function(e){io.observe(e)});
+  document.querySelectorAll('[data-copy]').forEach(function(b){
+    var label=b.querySelector('span'),text=label.textContent,t;
+    b.addEventListener('click',function(){
+      var v=b.getAttribute('data-copy');
+      function done(){label.textContent='Адрес скопирован';clearTimeout(t);t=setTimeout(function(){label.textContent=text},2000)}
+      function old(){var a=document.createElement('textarea');a.value=v;a.setAttribute('readonly','');a.style.position='fixed';a.style.opacity='0';document.body.appendChild(a);a.select();
+        try{document.execCommand('copy');done()}catch(e){label.textContent=v}document.body.removeChild(a)}
+      if(navigator.clipboard&&window.isSecureContext){navigator.clipboard.writeText(v).then(done,old)}else{old()}
+    });
+  });
   var ex=document.getElementById('example'),first=document.querySelector('#example .s');
   if(reduce||!ex||!first)return;
   var hintIo=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){hintIo.disconnect();
